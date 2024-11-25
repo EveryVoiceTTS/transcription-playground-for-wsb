@@ -1,0 +1,43 @@
+/*@use "@angular/material" as mat;
+
+@include mat.core();
+$primary :mat.$blue-palette;
+
+$dark-theme: mat.define-theme((color:(theme-type: dark,
+        primary: $primary , tertiary:mat.$azure-palette , use-system-variables: true, ),
+      typography: (use-system-variables: true),
+      density:(scale:-1)));
+
+$light-theme: mat.define-theme((color: (theme-type: light,
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+        use-system-variables: true),
+      typography: (use-system-variables: true),
+      density: (scale: 0,
+
+      )));
+
+:root {
+  @include mat.all-component-themes($light-theme);
+  @include mat.system-level-colors($light-theme); // 👈 Added
+  @include mat.system-level-typography($light-theme); // 👈 Added
+}
+
+html {
+  // Emit theme-dependent styles for common features used across multiple components.
+  @include mat.core-theme($light-theme);
+  //@include mat.all-component-themes($light-theme);
+  // Emit styles for MatButton based on `$my-theme`. Because the configuration
+  // passed to `define-theme` omits typography, `button-theme` will not
+  // emit any typography styles.
+  @include mat.button-theme($light-theme);
+  @include mat.tabs-theme($light-theme);
+
+  // Include the theme mixins for other components you use here.
+
+  @media (prefers-color-scheme:dark) {}
+}
+*/
+:root {
+  --md-sys-color-primary: #ed6967;
+}

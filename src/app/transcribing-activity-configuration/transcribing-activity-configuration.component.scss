@@ -1,0 +1,53 @@
+:host {
+  min-height: 100vh;
+  --mat-divider-color: #6c757d;
+}
+
+.form-control,
+.form-select {
+  margin: .375em .75em;
+}
+
+#name {
+  display: block;
+}
+
+#description,
+#text_instructions,
+#activity_data {
+  display: block;
+}
+
+div {
+  margin-bottom: 1em;
+}
+
+div[role=tabpanel] {
+  margin-top: 1em;
+  margin-bottom: 1em;
+
+}
+
+label {
+  margin-right: .75em;
+}
+
+@media screen and (min-width:765px) {
+
+  .select-group {
+    margin-right: 1em;
+    display: inline-block;
+  }
+}
+
+.btn-outline-secondary {
+  border: 1px solid #6c757d;
+  padding: .325em .75em;
+  margin: .25em .125em;
+  color: #6c757d;
+}
+
+.mat-divider {
+  margin-top: 1em;
+
+}

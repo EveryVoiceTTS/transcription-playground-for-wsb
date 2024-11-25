@@ -1,0 +1,303 @@
+<h3>Create a transcription activity</h3>
+<md-tabs
+  aria-label="configure activity step"
+  auto-activate
+  [activeTabIndex]="configStep"
+>
+  <md-primary-tab
+    id="step-config-tab"
+    aria-controls="step-config-panel"
+    [active]="configStep == 1"
+    (click)="configStep = 0"
+  >
+    Step 1: Setup activity parameters
+  </md-primary-tab>
+  <md-primary-tab
+    id="step-data-tab"
+    aria-controls="step-data-panel"
+    [active]="configStep == 2"
+    (click)="configStep = 2"
+  >
+    Step 2: Add data
+  </md-primary-tab>
+  <md-primary-tab
+    id="step-preview-tab"
+    aria-controls="step-preview-panel"
+    [active]="configStep == 3"
+    (click)="runActivity()"
+    [disabled]="data.length < 1 && api_is_reachable"
+  >
+    Step 3: Preview
+  </md-primary-tab>
+</md-tabs>
+
+<div id="step-config-panel" [hidden]="configStep != 1">
+  <md-tabs
+    aria-label="configure activity"
+    auto-activate
+    [activeTabIndex]="activityConfigurationActiveTab"
+  >
+    <md-primary-tab
+      id="input-config-tab"
+      aria-controls="input-config-panel"
+      [active]="activityConfigurationActiveTab == 0"
+      (click)="activityConfigurationActiveTab = 0"
+    >
+      Create Configuration
+    </md-primary-tab>
+    <md-primary-tab
+      id="load-config-tab"
+      aria-controls="load-config-panel"
+      [active]="activityConfigurationActiveTab == 1"
+      (click)="activityConfigurationActiveTab = 1"
+    >
+      Load Configuration
+    </md-primary-tab>
+  </md-tabs>
+  <div
+    id="load-config-panel"
+    aria-labelledby="load-config-tab"
+    aria-label="load-config-panel"
+    role="tabpanel"
+    [hidden]="activityConfigurationActiveTab != 1"
+  >
+    <label>Load previous configuration</label>
+    <input
+      (change)="loadPreviousConfig($event)"
+      type="file"
+      accept="json"
+      title="load previous config"
+      class="form-control"
+    />
+  </div>
+  <div
+    id="input-config-panel"
+    aria-label="input-config-panel"
+    aria-labelledby="input-config-tab"
+    role="tabpanel"
+    [hidden]="activityConfigurationActiveTab != 0"
+  >
+    <md-outlined-text-field
+      label="Title of activity"
+      id="name"
+      placeholder="title of activity"
+      class="form-control"
+      [value]="activityConfigurationForm.value.title"
+      (change)="update_config('name', $event)"
+      required
+    ></md-outlined-text-field>
+
+    <md-outlined-text-field
+      label="Description of activity"
+      id="description"
+      class="form-control"
+      placeholder="description of activity"
+      [value]="activityConfigurationForm.value.description"
+      type="textarea"
+      (change)="update_config('description', $event)"
+    ></md-outlined-text-field>
+
+    <md-outlined-text-field
+      label="Instruction for this activity"
+      id="text_instructions"
+      class="form-control"
+      placeholder="instructions for the activity"
+      [value]="activityConfigurationForm.value.text_instructions"
+      type="textarea"
+      (change)="update_config('text_instructions', $event)"
+    ></md-outlined-text-field>
+
+    <md-outlined-text-field
+      label="Max number of items per session"
+      class="form-control"
+      id="limit"
+      type="number"
+      class="form-control"
+      [value]="activityConfigurationForm.value.limit"
+      title="limit"
+      (change)="update_config('limit', $event)"
+      required
+    ></md-outlined-text-field>
+    <label
+      >Randomize data
+      <md-switch
+        [selected]="activityConfigurationForm.value.randomize"
+        (change)="toggle_randomize()"
+        label="Randomly words pick from data"
+      >
+      </md-switch>
+    </label>
+
+    <md-outlined-select
+      id="validator_level"
+      class="form-select"
+      [value]="activityConfigurationForm.value.validator_level"
+      (change)="update_validator_level($event)"
+      required
+      label="Validation level"
+    >
+      <md-select-option value="exact"
+        ><div slot="headline">Exact match</div></md-select-option
+      >
+      <md-select-option value="case_insensitive"
+        ><div slot="headline">Ignore Case</div></md-select-option
+      >
+      <md-select-option value="phon_aprrox"
+        ><div slot="headline">PHONETIC APPROXIMATE</div></md-select-option
+      >
+      <md-select-option selected value="accent_insensitive"
+        ><div slot="headline">Accept ascii</div></md-select-option
+      >
+    </md-outlined-select>
+
+    <div>
+      <md-outlined-text-field
+        label="API"
+        class="form-control"
+        id="api"
+        title="API"
+        [value]="activityConfigurationForm.value.api"
+        (change)="update_config('api', $event)"
+        [error]="!api_is_reachable"
+        error-text="API is not reachable"
+        required
+      />
+
+      <md-outlined-select
+        class="form-select"
+        id="lang"
+        [value]="activityConfigurationForm.value.lang"
+        (change)="update_config('lang', $event)"
+        required
+        label="Language"
+      >
+        <md-select-option value="str" selected
+          ><div slot="headline">SENĆOŦEN</div></md-select-option
+        >
+      </md-outlined-select>
+
+      <md-outlined-select id="speaker" required label="Speaker">
+        <md-select-option selected value="penac">
+          <div slot="headline">penac</div>
+        </md-select-option>
+      </md-outlined-select>
+
+      <div class="select-group">
+        <label for="duration">Synthesized speech speed</label>
+
+        <md-slider
+          label="Synthesized speech control"
+          min="0.75"
+          max="1.75"
+          step="0.25"
+          (change)="update_duration($event)"
+          [value]="activityConfigurationForm.value.duration_control"
+          id="duration"
+          nameStart="Fast"
+          nameEnd="Slow"
+        >
+        </md-slider>
+      </div>
+    </div>
+    <md-filled-button
+      mat-button
+      class="btn btn-xl btn-info"
+      id="save_config"
+      (click)="saveActivity()"
+      [disabled]="this.activityConfigurationForm.value.title.length < 3"
+    >
+      Export Configuration
+    </md-filled-button>
+  </div>
+</div>
+<div id="step-data-panel" [hidden]="configStep != 2">
+  <md-tabs
+    aria-label="create activity data"
+    auto-activate
+    [activeTabIndex]="activityDataActiveTab"
+  >
+    <md-primary-tab
+      id="input-data-tab"
+      aria-controls="input-data-panel"
+      [active]="activityDataActiveTab == 0"
+      (click)="activityDataActiveTab = 0"
+    >
+      Create Data
+    </md-primary-tab>
+    <md-primary-tab
+      id="load-config-tab"
+      aria-controls="load-config-panel"
+      [active]="activityDataActiveTab == 1"
+      (click)="activityDataActiveTab = 1"
+    >
+      Import Data
+    </md-primary-tab>
+  </md-tabs>
+  <div
+    id="load-data-panel"
+    aria-labelledby="load-data-tab"
+    aria-label="load-data-panel"
+    role="tabpanel"
+    [hidden]="activityDataActiveTab != 1"
+  >
+    <label for="dataLoader">import data file</label
+    ><input
+      type="file"
+      id="dataLoader"
+      (change)="loadPreviousData($event)"
+      accept="json"
+    />
+  </div>
+  <div
+    id="input-data-panel"
+    aria-labelledby="input-data-tab"
+    aria-label="input-data-panel"
+    role="tabpanel"
+    [hidden]="activityDataActiveTab != 0"
+  >
+    <md-outlined-text-field
+      label="Data for this activity"
+      id="activity_data"
+      class="form-control"
+      placeholder="data for the activity"
+      type="textarea"
+      [value]="new_word"
+      (change)="updateData($event)"
+    ></md-outlined-text-field>
+  </div>
+
+  <div class="">
+    <md-outlined-button
+      mat-button
+      class="btn btn-xl btn-primary me-2"
+      (click)="addWord($event)"
+    >
+      Add
+    </md-outlined-button>
+
+    <md-filled-tonal-button
+      mat-button
+      class="btn btn-xl btn-info"
+      (click)="saveWordList()"
+      [disabled]="data.length < 1"
+    >
+      Export Word List
+    </md-filled-tonal-button>
+  </div>
+
+  <div class="">
+    @for( word of data; track word){
+    <span class="btn btn-outline-secondary m-1">
+      {{ word.orthography }}
+    </span>
+    }
+  </div>
+</div>
+<div id="step-preview-panel" [hidden]="configStep != 3">
+  @if(dataURL.length>1 && configURL.length>1){
+  <app-transcribing-activity
+    [activity_data_url]="dataURL"
+    [activity_config_url]="configURL"
+  ></app-transcribing-activity>
+  }
+</div>
