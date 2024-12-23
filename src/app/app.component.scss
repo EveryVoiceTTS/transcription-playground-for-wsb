@@ -2,4 +2,41 @@ footer {
   font-size: 1em;
   color: #aaa;
   text-align: center;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1rem;
+  background: white;
+}
+
+nav {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--md-sys-color-primary);
+  margin-bottom: 1.5em;
+  height: 50px;
+  font-size: 2em;
+  font-weight: 100;
+  color: var(--md-sys-color-tertiary);
+  padding: .125em .75em;
+}
+
+nav a {
+  float: right;
+  margin: .125em;
+  padding: .325em .75em;
+  color: var(--md-sys-color-primary);
+  font-weight: 100;
+  font-size: 0.8em;
+  font-decoration: none;
+}
+
+nav a:hover {
+  color: var(--md-sys-color-primary);
+}
+
+nav a:active {
+  color: var(--md-sys-color-primary);
+  font-weight: 300;
 }

@@ -1,23 +1,10 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
-  ReactiveFormsModule,
-  FormsModule,
 } from '@angular/forms';
-
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatStepperModule } from '@angular/material/stepper';
 
 import '@material/web/button/filled-button';
 import '@material/web/button/filled-tonal-button';
@@ -55,7 +42,7 @@ import {
   ],
   standalone: true,
 })
-export class TranscribingActivityConfigurationComponent implements OnInit {
+export class TranscribingActivityConfigurationComponent {
   activityConfigurationForm: FormGroup;
   data: Word[];
   new_word: string;
@@ -97,35 +84,64 @@ export class TranscribingActivityConfigurationComponent implements OnInit {
     return $form;
   }
 
-  saveActivity() {
+  exportActivityConfiguration() {
     const $data: TranscribingActivityConfigurationMeta = this.configuration();
     if ($data.title) {
       WriteActivityConfiguration(
         JSON.stringify($data),
         `${$data.title}-activity-configuration`
       );
-      this.toastr.success('Activity parameters have be saved', 'Save Activity');
+      this.toastr.success('Activity parameters have be saved');
     } else {
       this.toastr.error(
-        'Activity parameters could not be saved\nPlease Provide a title',
-        'Save Activity'
+        'Activity parameters could not be saved\nPlease Provide a title'
       );
     }
   }
 
-  saveWordList() {
+  exportActivityData() {
     console.log('save', this.data);
     if (this.data.length) {
       WriteActivityConfiguration(JSON.stringify(this.data), 'data');
-      this.toastr.success('Activity data have be saved', 'Save Activity');
+      this.toastr.success('Activity data have be saved');
     } else {
-      this.toastr.error(
-        'There is no activity data to be saved',
-        'Save Activity'
-      );
+      this.toastr.error('There is no activity data to be saved');
     }
   }
-  ngOnInit(): void {}
+  exportActivity() {
+    const config: TranscribingActivityConfigurationMeta = this.configuration();
+    if (config.title == undefined || config.title.length < 1) {
+      this.toastr.error(
+        'Activity  could not be exported\nPlease Provide a title'
+      );
+      this.configStep = 1;
+      return;
+    }
+    if (
+      config.api === undefined ||
+      config.api.length < 1 ||
+      !this.api_is_reachable
+    ) {
+      this.toastr.error(
+        'Activity  could not be exported\nPlease Provide an API URL'
+      );
+      this.configStep = 1;
+      return;
+    }
+    if (this.data.length < 2) {
+      this.toastr.error('Activity  could not be exported\nPlease some text');
+      this.configStep = 2;
+      return;
+    }
+    WriteActivityConfiguration(
+      JSON.stringify({
+        configuration: config,
+        data: utf8_to_b64(JSON.stringify(this.data)),
+      }),
+      `${config.title}-activity`
+    );
+  }
+
   addWord($event: Event): void {
     const words: Word[] = this.new_word
       .split('\n')
@@ -138,7 +154,7 @@ export class TranscribingActivityConfigurationComponent implements OnInit {
     this.new_word = '';
     $event.preventDefault();
   }
-  runActivity() {
+  previewActivity() {
     if (this.activityConfigurationForm.value.title.length < 2) {
       this.toastr.error('Please provide an activity name');
       this.configStep = 1;
@@ -204,12 +220,10 @@ export class TranscribingActivityConfigurationComponent implements OnInit {
       this.activityConfigurationForm.patchValue(
         JSON.parse(b64_to_utf8(text.substring(text.indexOf('base64,') + 7)))
       );
-      this.toastr.success(
-        'Activity parameters have be loaded',
-        'Load Activity'
-      );
+      this.toastr.success('Activity parameters have be loaded');
       if (this.activityConfigurationForm.value.title.length)
         this.configStep = 2;
+      this.update_api_status();
     });
   }
   loadPreviousData($event: Event) {
@@ -227,30 +241,28 @@ export class TranscribingActivityConfigurationComponent implements OnInit {
       if (data[0] !== undefined && data[0]['orthography']) {
         this.data = data as Word[];
 
-        this.toastr.success(
-          'Activity data have be loaded',
-          'Import Activity Data'
-        );
+        this.toastr.success('Activity data have be loaded');
         if (this.activityConfigurationForm.value.title.length)
-          this.runActivity();
+          this.previewActivity();
       } else {
-        this.toastr.error('File format not recognized', 'Import Activity Data');
+        this.toastr.error('File format not recognized');
       }
     });
   }
   update_api_status() {
+    console.log(
+      'checking api status',
+      this.activityConfigurationForm.value.api
+    );
     if (this.activityConfigurationForm.value.api.length)
       fetch(this.activityConfigurationForm.value.api, { method: 'OPTIONS' })
         .then(() => {
           this.api_is_reachable = true;
-          this.toastr.success('API endpoint is reachable', 'API Status');
+          this.toastr.success('API endpoint is reachable');
         })
         .catch((err) => {
           this.api_is_reachable = false;
-          this.toastr.error(
-            `API endpoint could not be reached \n${err}`,
-            'API Status'
-          );
+          this.toastr.error(`API endpoint could not be reached \n${err}`);
         });
   }
   updateData($event: Event) {

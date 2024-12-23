@@ -8,7 +8,7 @@
     id="step-config-tab"
     aria-controls="step-config-panel"
     [active]="configStep == 1"
-    (click)="configStep = 0"
+    (click)="configStep = 1"
   >
     Step 1: Setup activity parameters
   </md-primary-tab>
@@ -24,11 +24,20 @@
     id="step-preview-tab"
     aria-controls="step-preview-panel"
     [active]="configStep == 3"
-    (click)="runActivity()"
+    (click)="previewActivity()"
     [disabled]="data.length < 1 && api_is_reachable"
   >
     Step 3: Preview
   </md-primary-tab>
+  <md-filled-button
+    mat-button
+    id="step-export-tab"
+    [active]="configStep == 4"
+    (click)="exportActivity()"
+    [disabled]="data.length < 2 || !api_is_reachable"
+  >
+    Step 4: Export
+  </md-filled-button>
 </md-tabs>
 
 <div id="step-config-panel" [hidden]="configStep != 1">
@@ -201,9 +210,8 @@
     </div>
     <md-filled-button
       mat-button
-      class="btn btn-xl btn-info"
       id="save_config"
-      (click)="saveActivity()"
+      (click)="exportActivityConfiguration()"
       [disabled]="this.activityConfigurationForm.value.title.length < 3"
     >
       Export Configuration
@@ -278,7 +286,7 @@
     <md-filled-tonal-button
       mat-button
       class="btn btn-xl btn-info"
-      (click)="saveWordList()"
+      (click)="exportActivityData()"
       [disabled]="data.length < 1"
     >
       Export Word List

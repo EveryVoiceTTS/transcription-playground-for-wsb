@@ -1,0 +1,13 @@
+<input
+  (change)="loadActivity($event)"
+  type="file"
+  accept="json"
+  title="load activity"
+  class="form-control"
+/>
+@if(dataURL.length>1 && configURL.length>1){
+<app-transcribing-activity
+  [activity_data_url]="dataURL"
+  [activity_config_url]="configURL"
+></app-transcribing-activity>
+}
