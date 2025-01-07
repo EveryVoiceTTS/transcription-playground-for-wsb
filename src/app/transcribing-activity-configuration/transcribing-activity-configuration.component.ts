@@ -189,6 +189,7 @@ export class TranscribingActivityConfigurationComponent {
     };
 
     this.activityConfigurationForm.patchValue(patch);
+    //console.log(this.activityConfigurationForm.value[key]);
     this.update_api_status();
   }
   update_duration($event: Event) {
@@ -255,7 +256,10 @@ export class TranscribingActivityConfigurationComponent {
       this.activityConfigurationForm.value.api
     );
     if (this.activityConfigurationForm.value.api.length)
-      fetch(this.activityConfigurationForm.value.api, { method: 'OPTIONS' })
+      fetch(this.activityConfigurationForm.value.api, {
+        method: 'OPTIONS',
+        headers: new Headers({ mode: 'no-cors' }),
+      })
         .then(() => {
           this.api_is_reachable = true;
           this.toastr.success('API endpoint is reachable');

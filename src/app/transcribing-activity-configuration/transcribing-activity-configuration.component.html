@@ -88,11 +88,11 @@
   >
     <md-outlined-text-field
       label="Title of activity"
-      id="name"
+      id="title"
       placeholder="title of activity"
       class="form-control"
       [value]="activityConfigurationForm.value.title"
-      (change)="update_config('name', $event)"
+      (change)="update_config('title', $event)"
       required
     ></md-outlined-text-field>
 
@@ -212,7 +212,7 @@
       mat-button
       id="save_config"
       (click)="exportActivityConfiguration()"
-      [disabled]="this.activityConfigurationForm.value.title.length < 3"
+      [disabled]="activityConfigurationForm.value.title.length < 3"
     >
       Export Configuration
     </md-filled-button>
@@ -267,7 +267,7 @@
       label="Data for this activity"
       id="activity_data"
       class="form-control"
-      placeholder="data for the activity"
+      placeholder="data for the activity (click add after each entry)"
       type="textarea"
       [value]="new_word"
       (change)="updateData($event)"
