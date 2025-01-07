@@ -16,7 +16,7 @@
             "outputPath": "dist/transcription-playground-for-wsb",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "main": "src/main.ts",
+
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [

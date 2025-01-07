@@ -96,7 +96,9 @@ export class TranscribingActivityComponent implements OnInit, OnChanges {
               data.duration_control;
           }
           if (data.api) {
-            fetch(data.api, { method: 'OPTIONS' })
+            fetch(
+              data.api.substr(0, data.api.lastIndexOf('/')) + '/gradio_api/info'
+            )
               .then(() => {
                 this.api_status = 'online';
                 this.toastr.success('API endpoint is reachable', 'API Status');
@@ -230,11 +232,15 @@ export class TranscribingActivityComponent implements OnInit, OnChanges {
           this.activity_config?.api
         )
         .then((url) => {
-          if (this.current_word) this.current_word.url = url;
+          if (url.length) {
+            if (this.current_word) this.current_word.url = url;
 
-          this.user_input = '';
-          //console.log(this.current_word, url);
-          this.current_audio_url.next(url);
+            this.user_input = '';
+            //console.log(this.current_word, url);
+            this.current_audio_url.next(url);
+          } else {
+            this.toastr.error('Failed to synthesize text');
+          }
         });
     }
   }
