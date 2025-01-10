@@ -30,8 +30,7 @@
     Step 3: Preview
   </md-primary-tab>
   <md-filled-button
-    mat-button
-    id="step-export-tab"
+    id="step-export-activity-button"
     [active]="configStep == 4"
     (click)="exportActivity()"
     [disabled]="data.length < 2 || !api_is_reachable"
@@ -210,7 +209,6 @@
       </div>
     </div>
     <md-filled-button
-      mat-button
       id="save_config"
       (click)="exportActivityConfiguration()"
       [disabled]="activityConfigurationForm.value.title.length < 3"
@@ -234,8 +232,8 @@
       Create Data
     </md-primary-tab>
     <md-primary-tab
-      id="load-config-tab"
-      aria-controls="load-config-panel"
+      id="load-data-tab"
+      aria-controls="load-data-panel"
       [active]="activityDataActiveTab == 1"
       (click)="activityDataActiveTab = 1"
     >
@@ -278,24 +276,25 @@
 
   <div class="">
     <md-outlined-button
-      mat-button
+      data-test-id="add_data"
       class="btn btn-xl btn-primary me-2"
       (click)="addWord($event)"
+      [disabled]="new_word.length < 1"
     >
       Add
     </md-outlined-button>
 
     <md-filled-tonal-button
-      mat-button
+      data-test-id="export_data"
       class="btn btn-xl btn-info"
       (click)="exportActivityData()"
       [disabled]="data.length < 1"
     >
-      Export Word List
+      Export List
     </md-filled-tonal-button>
   </div>
 
-  <div class="">
+  <div class="" data-test-id="data_list">
     @for( word of data; track word){
     <span class="btn btn-outline-secondary m-1">
       {{ word.orthography }}

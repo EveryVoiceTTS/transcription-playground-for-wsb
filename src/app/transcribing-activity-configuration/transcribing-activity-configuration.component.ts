@@ -221,7 +221,7 @@ export class TranscribingActivityConfigurationComponent {
       this.activityConfigurationForm.patchValue(
         JSON.parse(b64_to_utf8(text.substring(text.indexOf('base64,') + 7)))
       );
-      this.toastr.success('Activity parameters have be loaded');
+      this.toastr.success('Activity parameters have been loaded');
       if (this.activityConfigurationForm.value.title.length)
         this.configStep = 2;
       this.update_api_status();
@@ -242,7 +242,7 @@ export class TranscribingActivityConfigurationComponent {
       if (data[0] !== undefined && data[0]['orthography']) {
         this.data = data as Word[];
 
-        this.toastr.success('Activity data have be loaded');
+        this.toastr.success('Activity data have been loaded');
         if (this.activityConfigurationForm.value.title.length)
           this.previewActivity();
       } else {
@@ -255,11 +255,16 @@ export class TranscribingActivityConfigurationComponent {
       'checking api status',
       this.activityConfigurationForm.value.api
     );
-    if (this.activityConfigurationForm.value.api.length)
-      fetch(this.activityConfigurationForm.value.api, {
-        method: 'OPTIONS',
-        headers: new Headers({ mode: 'no-cors' }),
-      })
+    if (this.activityConfigurationForm.value.api.length) {
+      const API =
+        (this.activityConfigurationForm.value.api.match(/\//g) || []).length > 2
+          ? this.activityConfigurationForm.value.api.substr(
+              0,
+              this.activityConfigurationForm.value.api.lastIndexOf('/')
+            )
+          : this.activityConfigurationForm.value.api;
+
+      fetch(API + '/gradio_api/info')
         .then(() => {
           this.api_is_reachable = true;
           this.toastr.success('API endpoint is reachable');
@@ -268,6 +273,7 @@ export class TranscribingActivityConfigurationComponent {
           this.api_is_reachable = false;
           this.toastr.error(`API endpoint could not be reached \n${err}`);
         });
+    }
   }
   updateData($event: Event) {
     this.new_word = ($event.currentTarget as HTMLInputElement)?.value;
