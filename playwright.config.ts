@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-
+const port = 5100;
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -24,13 +24,18 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env['PLAYWRIGHT_TEST_BASE_URL'] ?? 'http://localhost:5100',
+    baseURL:
+      process.env['PLAYWRIGHT_TEST_BASE_URL'] ?? 'http://localhost:' + port,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     testIdAttribute: 'data-test-id',
   },
-
+  webServer: {
+    command: 'npx ng serve' + (process.env['CI'] ? '' : ' --port=' + port),
+    port: process.env['CI'] ? 4200 : port,
+    reuseExistingServer: !process.env['CI'],
+  },
   /* Configure projects for major browsers */
   projects: [
     {
