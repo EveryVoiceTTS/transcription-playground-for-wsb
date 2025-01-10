@@ -2,8 +2,11 @@ import { test, expect } from '@playwright/test';
 import { mockEveryVoiceAPI } from './fixtures/data-fixture';
 
 test.describe('test player interface', () => {
-  test('check UI', async ({ page }) => {
+  test.beforeEach('Setup', async ({ page }) => {
+    mockEveryVoiceAPI(page);
     await page.goto('/');
+  });
+  test('check UI', async ({ page }) => {
     await expect(
       page.getByTestId('activity_loader_input'),
       'should have activity loader '
@@ -19,9 +22,6 @@ test.describe('test player interface', () => {
     ).toBeVisible();
   });
   test('play activity', async ({ page }) => {
-    await page.goto('/');
-    mockEveryVoiceAPI(page);
-
     await page.getByTestId('activity_loader_input').click();
     await page
       .getByTestId('activity_loader_input')
@@ -141,5 +141,31 @@ test.describe('test player interface', () => {
       completedList.locator('li').last().locator('span.status'),
       'expect first completed item to give positive feedback'
     ).toHaveClass(/danger/);
+  });
+
+  test('check file import handling', async ({ page }) => {
+    await page
+      .getByTestId('activity_loader_input')
+      .setInputFiles('e2e/fixtures/test-config.json');
+    await expect(
+      page.getByText(/File data is unfamiliar/).last(),
+      'alert config loaded'
+    ).toBeVisible();
+
+    await page
+      .getByTestId('activity_loader_input')
+      .setInputFiles('e2e/fixtures/test-data.json');
+    await expect(
+      page.getByText(/File data is unfamiliar/).last(),
+      'alert data loaded'
+    ).toBeVisible();
+
+    await page
+      .getByTestId('activity_loader_input')
+      .setInputFiles('e2e/fixtures/test-activity.json');
+    await expect(
+      page.getByText(/Activity has be loaded/).last(),
+      'alert config loaded'
+    ).toBeVisible();
   });
 });

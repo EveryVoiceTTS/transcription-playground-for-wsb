@@ -34,7 +34,7 @@ export class TranscribingActivityLoaderComponent {
           JSON.stringify(input.configuration)
         )}`;
         this.dataURL = `data:application/json;base64,${input.data}`;
-        this.toastr.success('Activity  have be loaded');
+        this.toastr.success('Activity has be loaded');
       } else {
         this.toastr.error('File data is unfamiliar');
       }

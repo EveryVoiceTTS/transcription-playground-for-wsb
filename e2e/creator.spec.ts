@@ -266,4 +266,34 @@ test.describe('test creator interface', () => {
       data.data
     );
   });
+  test('check file import handling', async ({ page }) => {
+    await page
+      .getByTestId('config-file-importer')
+      .setInputFiles('e2e/fixtures/test-activity.json');
+    await expect(
+      page.getByText(/Activity parameters could not be loaded/).last(),
+      'alert config loaded'
+    ).toBeVisible();
+    await page
+      .getByTestId('config-file-importer')
+      .setInputFiles('e2e/fixtures/test-config.json');
+    await expect(
+      page.getByText(/Activity parameters have been loaded/).last(),
+      'alert config loaded'
+    ).toBeVisible();
+    await page
+      .getByTestId('data-file-importer')
+      .setInputFiles('e2e/fixtures/test-activity.json');
+    await expect(
+      page.getByText(/Activity data could not be loaded/).last(),
+      'alert data loaded'
+    ).toBeVisible();
+    await page
+      .getByTestId('data-file-importer')
+      .setInputFiles('e2e/fixtures/test-data.json');
+    await expect(
+      page.getByText(/Activity data have been loaded/).last(),
+      'alert data loaded'
+    ).toBeVisible();
+  });
 });

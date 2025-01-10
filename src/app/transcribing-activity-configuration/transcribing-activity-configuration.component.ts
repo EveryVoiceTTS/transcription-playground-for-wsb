@@ -221,10 +221,17 @@ export class TranscribingActivityConfigurationComponent {
       this.activityConfigurationForm.patchValue(
         JSON.parse(b64_to_utf8(text.substring(text.indexOf('base64,') + 7)))
       );
-      this.toastr.success('Activity parameters have been loaded');
-      if (this.activityConfigurationForm.value.title.length)
+
+      if (this.activityConfigurationForm.value.title.length) {
         this.configStep = 2;
-      this.update_api_status();
+        this.toastr.success('Activity parameters have been loaded');
+
+        this.update_api_status();
+      } else {
+        this.toastr.error(
+          'File format not recognized,\nActivity parameters could not be loaded'
+        );
+      }
     });
   }
   loadPreviousData($event: Event) {
@@ -246,7 +253,9 @@ export class TranscribingActivityConfigurationComponent {
         if (this.activityConfigurationForm.value.title.length)
           this.previewActivity();
       } else {
-        this.toastr.error('File format not recognized');
+        this.toastr.error(
+          'File format not recognized,\nActivity data could not be loaded'
+        );
       }
     });
   }
