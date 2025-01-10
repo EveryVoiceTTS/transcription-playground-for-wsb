@@ -1,0 +1,12 @@
+{
+  "title": "transcribe test",
+  "description": "",
+  "text_instructions": "",
+  "limit": 10,
+  "randomize": true,
+  "speaker": "penac",
+  "lang": "str",
+  "api": "https://mock-api.dev/",
+  "validator_level": "accent_insensitive",
+  "duration_control": 1
+}

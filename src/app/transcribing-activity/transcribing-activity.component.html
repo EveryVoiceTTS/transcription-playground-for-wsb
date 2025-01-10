@@ -78,6 +78,7 @@
         id="startActivity"
         [style.fontSize.em]="2"
         (click)="startActivity()"
+        data-test-id="start_activity"
       >
         Start
         <svg
@@ -234,22 +235,23 @@
     @if(completed < total){
     <div class="row mt-3">
       <div class="col feedback">
-        <md-filled-button (click)="synthesizeNext()"> Next </md-filled-button>
+        <md-filled-button (click)="synthesizeNext()" data-test-id="next_item">
+          Next
+        </md-filled-button>
       </div>
     </div>
     } } @if(completed_words.length>0){
     <div class="row mt-5">
       <div class="col">
         <h3>Completed</h3>
-        <ul class="list-group">
+        <ul class="completed-list" data-test-id="completed_list">
           @for (word of completed_words; track $index) {
-          <li class="list-group-item">
-            <audio>
-              <source type="audio/mpeg" [src]="word.url" />
-            </audio>
-            <span>{{ word.orthography }}</span>
+          <li>
+            <span (click)="playAudio(word.url || '')">{{
+              word.orthography
+            }}</span>
             @if(completed_words_validation[$index]){
-            <span class="text-success">
+            <span class="status ms-3 text-success">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1em"
@@ -261,7 +263,7 @@
                 <use xlink:href="#check"></use></svg
             ></span>
             }@else {
-            <span class="ms-3 text-danger">
+            <span class="status ms-3 text-danger">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1em"

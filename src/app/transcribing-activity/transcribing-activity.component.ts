@@ -96,17 +96,22 @@ export class TranscribingActivityComponent implements OnInit, OnChanges {
               data.duration_control;
           }
           if (data.api) {
-            fetch(
-              data.api.substr(0, data.api.lastIndexOf('/')) + '/gradio_api/info'
-            )
+            const API =
+              (data.api.match(/\//g) || []).length > 2
+                ? data.api.substr(0, data.api.lastIndexOf('/'))
+                : data.api;
+            fetch(API + '/gradio_api/info')
               .then(() => {
                 this.api_status = 'online';
                 this.toastr.success('API endpoint is reachable', 'API Status');
               })
               .catch((err) => {
                 this.api_status = 'offline';
+                const remedy = data.api.includes('http://')
+                  ? `Please add '${API}' to  Insecure origins treated as secure (chrome://flags/#unsafely-treat-insecure-origin-as-secure)`
+                  : '';
                 this.toastr.error(
-                  `API endpoint could not be reached \n${err}`,
+                  `API endpoint could not be reached \n${err}\nremedy`,
                   'API Status'
                 );
               });
@@ -200,7 +205,9 @@ export class TranscribingActivityComponent implements OnInit, OnChanges {
         ? this.activity_data.length
         : 10;
       while (indices.length < this.total) {
-        const index = Math.floor(Math.random() * this.activity_data.length);
+        const index = this.activity_config.randomize
+          ? Math.floor(Math.random() * this.activity_data.length)
+          : indices.length;
         if (indices.includes(index)) continue;
         const data: Word | null = this.activity_data[index] ?? null;
 
@@ -241,6 +248,7 @@ export class TranscribingActivityComponent implements OnInit, OnChanges {
           } else {
             this.toastr.error('Failed to synthesize text');
           }
+          this.is_synthesizing = false;
         });
     }
   }
@@ -372,7 +380,7 @@ export class TranscribingActivityComponent implements OnInit, OnChanges {
     }
   }
   feedBackClassList(index: number): string {
-    const classes = ['letter', 'btn'];
+    const classes = ['letter', 'btn', 'feedback'];
     if (this.validation_results[index]) {
       let feedback = 'btn-outline-danger';
       switch (this.validation_results[index].status) {
@@ -402,5 +410,12 @@ export class TranscribingActivityComponent implements OnInit, OnChanges {
   }
   user_typed($event: Event) {
     this.user_input = ($event.currentTarget as HTMLInputElement)?.value;
+  }
+  playAudio(url: string) {
+    if (url.length < 1) return;
+    const player = new Audio(url);
+    try {
+      player.play();
+    } catch (error) {}
   }
 }

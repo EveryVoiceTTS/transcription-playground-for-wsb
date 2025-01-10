@@ -77,6 +77,7 @@
       accept="json"
       title="load previous config"
       class="form-control"
+      data-test-id="config-file-importer"
     />
   </div>
   <div
@@ -252,6 +253,7 @@
     ><input
       type="file"
       id="dataLoader"
+      data-test-id="data-file-importer"
       (change)="loadPreviousData($event)"
       accept="json"
     />

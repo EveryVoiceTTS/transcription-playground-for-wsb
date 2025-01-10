@@ -18,7 +18,7 @@ jobs:
       #    npm run test
       - name: Build
         run: |
-          npm run-script build
+          npx ng build --base-href ./
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:

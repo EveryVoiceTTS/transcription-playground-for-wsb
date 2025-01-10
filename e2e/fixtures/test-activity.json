@@ -1,0 +1,15 @@
+{
+  "configuration": {
+    "title": "transcribe test",
+    "description": "",
+    "text_instructions": "",
+    "limit": 10,
+    "randomize": false,
+    "speaker": "penac",
+    "lang": "str",
+    "api": "https://mock-api.dev/",
+    "validator_level": "accent_insensitive",
+    "duration_control": 1
+  },
+  "data": "W3sib3J0aG9ncmFwaHkiOiJYzLFFWMyxRSDDgUzhuLQgyLtFyLtFTlNJRVfMsSJ9LHsib3J0aG9ncmFwaHkiOiJQRUwgU0VLIMOBTkUgVEXhuYggU0UgU8OBIMSGReG5iCJ9LHsib3J0aG9ncmFwaHkiOiJT4oKtRUxF4oKtRSDEhk9YzLFF4bmIIFnIullFUSJ9XQ=="
+}
