@@ -1,5 +1,3 @@
-//@use "../app.bootstrap.base.scss";
-
 :host {}
 
 #userInput {
@@ -7,6 +5,7 @@
   min-height: 20vh;
 }
 
+/* bootstrap components */
 .container {
   --tp-gutter-x: 1.5rem;
   --tp-gutter-y: 0;
@@ -22,9 +21,6 @@
 *::after {
   box-sizing: border-box;
 }
-
-
-
 
 .row {
   --tp-gutter-x: 1.5rem;
@@ -217,6 +213,7 @@
   --tp-gradient: none;
 }
 
+/** end of bootstrap */
 #startActivity {
   height: 2em;
   --_label-text-line-height: 1.9em;

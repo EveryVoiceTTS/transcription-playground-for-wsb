@@ -169,7 +169,7 @@
           </md-outlined-button>
         </span>
       </div>
-      <div class="col px-5">
+      <div class="col px-5" data-test-id="special_chars">
         @for (char of special_chars; track $index) {
         <md-outlined-button (click)="insertAlphabet(char)">
           {{ char }}

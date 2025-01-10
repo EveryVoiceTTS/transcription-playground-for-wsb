@@ -40,7 +40,35 @@ test.describe('test player interface', () => {
       page.getByText('Audio generated'),
       'should display notice about audio'
     ).toBeVisible();
-    await expect(page.getByTitle('Play'), 'should have play').toBeVisible();
+    await expect(
+      page.getByText('transcribe test'),
+      'should have title'
+    ).toBeVisible();
+    await expect(
+      page.getByText('Write what you hear'),
+      'should have instructions'
+    ).toBeVisible();
+    await expect(
+      page.getByTitle('Play'),
+      'should have play button'
+    ).toBeVisible();
+    await expect(
+      page.getByTitle('Pause'),
+      'should have play button'
+    ).toBeVisible();
+    await expect(
+      page.getByTitle('Stop'),
+      'should have play button'
+    ).toBeVisible();
+    await expect(
+      page.getByTestId('special_chars'),
+      'should display special characters'
+    ).toBeVisible();
+    await expect(
+      page.getByTestId('special_chars').getByRole('button'),
+      'should have 12 special characters'
+    ).toHaveCount(16);
+
     await page.getByTitle('Play').click();
     await expect
       .soft(
@@ -76,7 +104,6 @@ test.describe('test player interface', () => {
       completedList.locator('li').first().locator('span.status'),
       'expect first completed item to give positive feedback'
     ).toHaveClass(/success/);
-
     //test ASCII input
     await page.getByTestId('next_item').click();
     await expect(
@@ -105,8 +132,9 @@ test.describe('test player interface', () => {
     await page.getByLabel('Transcript').fill('PEL SEK ANE TEṈ SE SA CEṈ');
     await page.getByTitle('Play').click();
     await page.getByTitle('validate').click({ force: true });
-    for (const letter of await page.locator('span.letter.feedback').all())
-      await expect(letter, 'input is correct').toHaveClass(
+    const letters = await page.locator('span.letter.feedback').all();
+    for (const letter of letters)
+      expect(letter, 'input is correct').toHaveClass(
         /btn-outline-(success|warning|danger)/
       );
     await expect(

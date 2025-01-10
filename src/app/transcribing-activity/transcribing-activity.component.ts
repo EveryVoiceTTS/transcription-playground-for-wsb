@@ -222,7 +222,7 @@ export class TranscribingActivityComponent implements OnInit, OnChanges {
   }
   synthesizeNext() {
     if (this.completed >= this.total) {
-      this.activityCompleted();
+      window.setTimeout(() => this.activityCompleted(), 3000);
       return;
     }
     if (this.current_words.length) {

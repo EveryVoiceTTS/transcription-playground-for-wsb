@@ -27,7 +27,7 @@ jobs:
         run: npm ci
       - name: Run Playwright tests
         run: |
-          npx playwright install --with-deps  firefox chromium webkit
+          npx playwright install --with-deps firefox chromium webkit
           npx ng e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Upload blob report to GitHub Actions Artifacts
         if: ${{ !cancelled() }}
